@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script>
+    const boardParent = document.createElement("div");
+
+    boardParent.style.position = "relative";
+    boardParent.style.display = "flex";
+    boardParent.style.width = "100%";
+    boardParent.style.height = "100vh";
+    boardParent.style.justifyContent = "center";
+    boardParent.style.alignItems = "center";
+
+    const board = document.createElement("div");
+
+    board.style.width = "120vmin";
+    board.style.height = "80vmin";
+    board.style.background = "#16161a";
+    board.style.position = "fixed";
+    board.style.overflow = "hidden";
+
+    const playerPaddle = document.createElement("div");
+
+    playerPaddle.style.position = "sticky";
+    playerPaddle.style.width = "2vmin";
+    playerPaddle.style.height = "10vmin";
+    playerPaddle.style.background = "#7f5af0";
+    playerPaddle.style.left = "2vmin";
+    playerPaddle.style.top = "35vmin"; // board.height / 2 - playerPaddle.height / 2
+
+    const ball = document.createElement("div");
+
+    ball.style.position = "absolute";
+    ball.style.width = "2vmin";
+    ball.style.height = "2vmin";
+    ball.style.borderRadius = "100%";
+    ball.style.background = "#2cb67d";
+    ball.style.left = "59vmin";
+    ball.style.top = "39vmin";
+
+    board.appendChild(playerPaddle);
+    board.appendChild(ball);
+    boardParent.appendChild(board);
+    document.body.appendChild(boardParent);
+
+    board.addEventListener("mousemove", function (e) {
+      let mx = e.clientX;
+      let my = e.clientY;
+
+      playerPaddle.style.top =
+        my - playerPaddle.getBoundingClientRect().height / 2 + "px";
+    });
+
+    let ballX = ball.getBoundingClientRect().x;
+    let ballY = ball.getBoundingClientRect().y;
+
+    let ballXs = -1;
+    let ballYs = 0;
+
+    function animation() {
+      ballX += ballXs;
+      ball.style.left = ballX + "px";
+
+    //   ballY += ballYs;
+    //   ballY.style.top = ballY + "px";
+
+      playerPaddleRect = playerPaddle.getBoundingClientRect();
+      ballRect = ball.getBoundingClientRect();
+
+      // collision detection
+
+      condition1 =
+        (playerPaddleRect.left + playerPaddleRect.width) > ballRect.left;
+      condition2 =
+        (playerPaddleRect.top + playerPaddleRect.height) > ballRect.top;
+      condition3 = playerPaddleRect.top < ballRect.top;
+      condition4 = playerPaddleRect.left < (ballRect.left + ballRect.width);
+
+      if (condition1 && condition2 && condition3 && condition4) {
+        ballXs = Math.abs(ballXs)
+        console.log(ballX)
+      }
+
+      window.requestAnimationFrame(animation);
+    }
+
+    window.requestAnimationFrame(animation);
+  </script>
+</html>
