@@ -29,8 +29,7 @@
     board.style.width = "120vmin";
     board.style.height = "80vmin";
     board.style.background = "#16161a";
-    board.style.position = "fixed";
-    board.style.overflow = "hidden";
+    board.style.position = "relative";
 
     const playerPaddle = document.createElement("div");
 
@@ -43,7 +42,7 @@
 
     const ball = document.createElement("div");
 
-    ball.style.position = "absolute";
+    ball.style.position = "relative";
     ball.style.width = "2vmin";
     ball.style.height = "2vmin";
     ball.style.borderRadius = "100%";
@@ -67,31 +66,43 @@
     let ballX = ball.getBoundingClientRect().x;
     let ballY = ball.getBoundingClientRect().y;
 
-    let ballXs = -1;
-    let ballYs = 0;
+    let ballXs = Math.random() * -2;
+    let ballYs = Math.random() * -2;
 
     function animation() {
       ballX += ballXs;
       ball.style.left = ballX + "px";
 
-    //   ballY += ballYs;
-    //   ballY.style.top = ballY + "px";
+      ballY += ballYs;
+      ball.style.top = ballY + "px";
 
-      playerPaddleRect = playerPaddle.getBoundingClientRect();
-      ballRect = ball.getBoundingClientRect();
+      let playerPaddleRect = playerPaddle.getBoundingClientRect();
+      let ballRect = ball.getBoundingClientRect();
+      let boardRect = board.getBoundingClientRect();
 
       // collision detection
 
-      condition1 =
-        (playerPaddleRect.left + playerPaddleRect.width) > ballRect.left;
-      condition2 =
-        (playerPaddleRect.top + playerPaddleRect.height) > ballRect.top;
-      condition3 = playerPaddleRect.top < ballRect.top;
-      condition4 = playerPaddleRect.left < (ballRect.left + ballRect.width);
+      let condition1 =
+        playerPaddleRect.left + playerPaddleRect.width > ballRect.left;
+      let condition2 =
+        playerPaddleRect.top + playerPaddleRect.height > ballRect.top;
+      let condition3 = playerPaddleRect.top < ballRect.top;
+      let condition4 = playerPaddleRect.left < ballRect.left + ballRect.width;
 
       if (condition1 && condition2 && condition3 && condition4) {
-        ballXs = Math.abs(ballXs)
-        console.log(ballX)
+        ballXs = Math.abs(ballXs);
+      }
+
+      let ballYCond = ballRect.top + ballRect.height / 2;
+      let paddleYCond = playerPaddleRect.top + playerPaddleRect.height / 2;
+
+      //if (paddleYCond > ballYCond)
+
+      if (ballRect.top - boardRect.top < 0) {
+        ballYs = Math.abs(ballYs);
+      }
+      if (ballRect.top + ballRect.height > boardRect.height + boardRect.top) {
+        ballYs = ballYs * -1;
       }
 
       window.requestAnimationFrame(animation);
